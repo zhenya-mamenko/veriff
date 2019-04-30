@@ -78,4 +78,13 @@
 	string API_KEY = (string)Application["API_KEY"];
 	string API_SECRET = (string)Application["API_SECRET"];
 	string API_URL = "https://api.veriff.me/v1";
+
+	int UserId = 0;
+	string UserFirstName = "", UserLastName = "";
+	if (Session["UserId"] != null)
+	{
+		UserId = (int)Session["UserId"];
+		UserFirstName = Session["UserFirstName"];
+		UserLastName = Session["UserLastName"];
+	}
 %>
