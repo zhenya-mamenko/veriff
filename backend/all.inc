@@ -16,11 +16,18 @@
 <%@ Import Namespace="System.Web" %>
 <%@ Import Namespace="System.Xml" %>
 <script runat="Server">
+
+	string Quote(string S)
+	{
+		return "'"+S.Replace("'", "''")+"'";
+	}
+
 	string TimeStamp()
 	{
 		DateTime d = DateTime.UtcNow;
 		return (d.ToString("yyyy-MM-dd'T'HH:mm:ss.fffK", CultureInfo.InvariantCulture));
 	}
+
 	string GenerateSignature(string Payload, string Secret)
 	{
 		var Builder = new StringBuilder();
@@ -34,6 +41,7 @@
 		}
 		return (Builder.ToString());
 	}
+
 	string FileToBase64(string FileName)
 	{
 		var InputFileStream = new FileStream(Server.MapPath("upload\\"+FileName), FileMode.Open, FileAccess.Read);
@@ -43,6 +51,7 @@
 		InputFileStream.Close();
 		return (Convert.ToBase64String(InputData, 0, InputData.Length, Base64FormattingOptions.None));
 	}
+
 	async Task<string> CallVeriffApi(HttpRequestMessage Message)
 	{
 		string VeriffResponse = "";
@@ -59,11 +68,13 @@
 		catch {}
 		return (VeriffResponse);
 	}
+
 </script>
 <%
 	HttpContext Context = HttpContext.Current;
 	SqlConnection Connection = new SqlConnection((string)Application["ConnectionString"]);
 	Connection.Open();
+
 	string API_KEY = (string)Application["API_KEY"];
 	string API_SECRET = (string)Application["API_SECRET"];
 	string API_URL = "https://api.veriff.me/v1";
