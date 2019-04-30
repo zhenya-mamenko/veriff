@@ -7,8 +7,12 @@
 <%@ Import Namespace="System.Data.SqlClient" %>
 <%@ Import Namespace="System.Globalization" %>
 <%@ Import Namespace="System.IO" %>
+<%@ Import Namespace="System.Net" %>
+<%@ Import Namespace="System.Net.Http" %>
+<%@ Import Namespace="System.Net.Http.Headers" %>
 <%@ Import Namespace="System.Security.Cryptography" %>
 <%@ Import Namespace="System.Text" %>
+<%@ Import Namespace="System.Threading.Tasks" %>
 <%@ Import Namespace="System.Web" %>
 <%@ Import Namespace="System.Xml" %>
 <script runat="Server">
@@ -39,6 +43,22 @@
 		InputFileStream.Close();
 		return (Convert.ToBase64String(InputData, 0, InputData.Length, Base64FormattingOptions.None));
 	}
+	async Task<string> CallVeriffApi(HttpRequestMessage Message)
+	{
+		string VeriffResponse = "";
+		try
+		{
+			using (HttpClient Client = new HttpClient())
+			{
+				HttpResponseMessage Result;
+				Result = await Client.SendAsync(Message);
+				Result.EnsureSuccessStatusCode();
+				VeriffResponse = await Result.Content.ReadAsStringAsync();
+			}			
+		}
+		catch {}
+		return (VeriffResponse);
+	}
 </script>
 <%
 	HttpContext Context = HttpContext.Current;
@@ -46,4 +66,5 @@
 	Connection.Open();
 	string API_KEY = (string)Application["API_KEY"];
 	string API_SECRET = (string)Application["API_SECRET"];
+	string API_URL = "https://api.veriff.me/v1";
 %>
