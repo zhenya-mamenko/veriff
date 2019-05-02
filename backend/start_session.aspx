@@ -44,7 +44,6 @@
 			T.Wait();
 			Result = T.Result;
 		}
-		Result = "{\"status\":\"success\",\"verification\":{\"id\":\"d58a9b37-fdd4-4864-b3ba-2af1e13c40df\",\"url\":\"https://magic.veriff.me/v/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjoiZDU4YTliMzctZmRkNC00ODY0LWIzYmEtMmFmMWUxM2M0MGRmIiwiaWF0IjoxNTU2NjA1Mzg1LCJleHAiOjE1NTcyMTAxODV9.7jsbjAy1Ln7gKB2x1PzRBKpuiWrdu6zzKFoGNGa-dyY\",\"vendorData\":null,\"host\":\"https://magic.veriff.me\",\"status\":\"created\",\"sessionToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2lkIjoiZDU4YTliMzctZmRkNC00ODY0LWIzYmEtMmFmMWUxM2M0MGRmIiwiaWF0IjoxNTU2NjA1Mzg1LCJleHAiOjE1NTcyMTAxODV9.7jsbjAy1Ln7gKB2x1PzRBKpuiWrdu6zzKFoGNGa-dyY\"}}";
 		var ResponseDefinition = new {
 			verification = new {
 				id = "",
@@ -118,6 +117,31 @@
 				{
 					throw new Exception();
 				}
+			}
+			var Done = new {
+				verification = new {
+					frontState = "done",
+					status = "submitted",
+					timestamp = TimeStamp()
+				}
+			};
+			string DoneJson = JsonConvert.SerializeObject(Done, Newtonsoft.Json.Formatting.Indented,
+				new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+			var Message = new HttpRequestMessage(new HttpMethod("PATCH"), String.Format("{0}/sessions/{1}", API_URL, VeriffResponse.verification.id));
+			Message.Content = new StringContent(DoneJson);
+			Message.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+			Message.Content.Headers.Add("x-auth-client", API_KEY);
+			Message.Content.Headers.Add("x-signature", GenerateSignature(DoneJson, API_SECRET));
+			var T = Task.Run(async delegate
+			{
+				return (await CallVeriffApi(Message));
+			});
+			T.Wait();
+			Result = T.Result;
+			Response.Write(Result);
+			if ((JsonConvert.DeserializeAnonymousType(Result, new { status = "" })).status != "success")
+			{
+				throw new Exception();
 			}
 		}
 		Response.Write(JsonConvert.SerializeObject(new {sessionId = VeriffResponse.verification.id, url = VeriffResponse.verification.url }));
