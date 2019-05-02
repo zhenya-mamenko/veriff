@@ -143,6 +143,10 @@
 			{
 				throw new Exception();
 			}
+			string Query = String.Format("exec sp_sessions_update @session_id={0}, @status={1}",
+				Quote(VeriffResponse.verification.id), Quote("submited"));
+			var Command = new SqlCommand(Query, Connection);
+			Command.ExecuteNonQuery();
 		}
 		Response.Write(JsonConvert.SerializeObject(new {sessionId = VeriffResponse.verification.id, url = VeriffResponse.verification.url }));
 	}
