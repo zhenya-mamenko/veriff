@@ -1,4 +1,4 @@
-<%@ Page Language="C#" Debug="true" validateRequest="false" %>
+<%@ Page Language="C#" Debug="true" validateRequest="false" Async="true" %>
 <%@ Import Namespace="Newtonsoft.Json" %>
 <%@ Import Namespace="System" %>
 <%@ Import Namespace="System.Collections" %>
@@ -19,7 +19,7 @@
 
 	string Quote(string S)
 	{
-		return "'"+S.Replace("'", "''")+"'";
+		return "'"+ S.Replace("'", "''") + "'";
 	}
 
 	string TimeStamp()
@@ -63,7 +63,7 @@
 				Result = await Client.SendAsync(Message);
 				Result.EnsureSuccessStatusCode();
 				VeriffResponse = await Result.Content.ReadAsStringAsync();
-			}			
+			}
 		}
 		catch {}
 		return (VeriffResponse);
@@ -84,7 +84,7 @@
 	if (Session["UserId"] != null)
 	{
 		UserId = (int)Session["UserId"];
-		UserFirstName = Session["UserFirstName"];
-		UserLastName = Session["UserLastName"];
+		UserFirstName = (string)Session["UserFirstName"];
+		UserLastName = (string)Session["UserLastName"];
 	}
 %>
