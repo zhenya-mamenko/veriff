@@ -42,9 +42,9 @@
 		return (Builder.ToString());
 	}
 
-	string FileToBase64(string FileName)
+	string FileToBase64(string FileName, string Path = @"upload\")
 	{
-		var InputFileStream = new FileStream(Server.MapPath("upload\\"+FileName), FileMode.Open, FileAccess.Read);
+		var InputFileStream = new FileStream(Server.MapPath(Path+FileName), FileMode.Open, FileAccess.Read);
 		var Base64Transform = new ToBase64Transform();
 		byte[] InputData = new byte[InputFileStream.Length];
 		InputFileStream.Read(InputData, 0, InputData.Length);
