@@ -79,8 +79,8 @@
 	string API_SECRET = (string)Application["API_SECRET"];
 	string API_URL = "https://api.veriff.me/v1";
 
-	int UserId = 0;
-	string UserFirstName = "", UserLastName = "";
+	int UserId = 1;
+	string UserFirstName = "Zhenya", UserLastName = "Mamenko";
 	if (Session["UserId"] != null)
 	{
 		UserId = (int)Session["UserId"];

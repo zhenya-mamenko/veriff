@@ -41,5 +41,6 @@
 		Response.StatusCode = 500;
 		Response.Write("<h1>500 Internal Server Error</h1><p>Error on getting user status.</p>");
 	}
+	Connection.Close();
 	Response.End();
 %>
