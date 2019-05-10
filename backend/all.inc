@@ -19,7 +19,7 @@
 
 	string Quote(string S)
 	{
-		return "'"+ S.Replace("'", "''") + "'";
+		return "'"+ (S == null ? "" : S.Replace("'", "''")) + "'";
 	}
 
 	string TimeStamp()
