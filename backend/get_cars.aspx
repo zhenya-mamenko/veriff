@@ -18,6 +18,28 @@
 		}
 		return (Result);
 	}
+
+	string FieldToJson(string S)
+	{
+		string Result = "";
+		bool IsCapital = false;
+		for (int i = 0; i < S.Length; i++)
+		{
+			if (IsCapital)
+			{
+				Result += Char.ToUpper(S[i]);
+				IsCapital = false;
+			}
+			else
+			{
+				if (S[i] == '_')
+					IsCapital = true;
+				else
+					Result += Char.ToLower(S[i]);
+			}
+		}
+		return (Result);
+	}
 </script>
 <%
 	Response.Clear();
@@ -66,7 +88,7 @@
 					dynamic Fields = new ExpandoObject();
 					for (int i = 0; i < Reader.FieldCount; i++)
 					{
-						(Fields as IDictionary<string, object>).Add(Reader.GetName(i), Reader[i]);
+						(Fields as IDictionary<string, object>).Add(FieldToJson(Reader.GetName(i)), Reader[i]);
 					}
 					CarsCount += 1;
 					(Fields as IDictionary<string, object>).Add("image",
