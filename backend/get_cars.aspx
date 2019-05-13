@@ -92,7 +92,7 @@
 					}
 					CarsCount += 1;
 					(Fields as IDictionary<string, object>).Add("image",
-						"data:image/png;base64,"+FileToBase64(String.Format("{0}.png", CarsCount), @"cars\"));
+						"data:image/png;base64,"+FileToBase64(String.Format("{0}.png", Reader["car_id"]), @"cars\"));
 					Cars.Add(Fields);
 				}
 				Response.Write(JsonConvert.SerializeObject(Cars, Newtonsoft.Json.Formatting.Indented));
