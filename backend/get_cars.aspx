@@ -73,7 +73,7 @@
 			Where += " and transmission_type = " + Quote(Request["transmission_type"]);
 		string Query = String.Format("with cars_filtered as (select *, row_number() over (order by {0}) as rn from vw_cars " +
 			"where is_rented = 0 {3}) " +
-			"select car_id, airport_name, is_airport, car_type, car_name, passengers, bags, doors, price_per_day, is_has_ac, transmission_type " +
+			"select car_id, airport_name, is_airport, car_type, car_name, passengers, bags, doors, price_per_day, is_has_ac, transmission_type, car_benefits " +
 			"from cars_filtered where rn between {1} and {2} order by {0}",
 			OrderBy, (Page - 1) * PageSize + 1, Page * PageSize, Where);
 		var Command = new SqlCommand(Query, Connection);
@@ -86,11 +86,12 @@
 				while (Reader.Read())
 				{
 					dynamic Fields = new ExpandoObject();
-					for (int i = 0; i < Reader.FieldCount; i++)
+					for (int i = 0; i < Reader.FieldCount - 1; i++)
 					{
 						(Fields as IDictionary<string, object>).Add(FieldToJson(Reader.GetName(i)), Reader[i]);
 					}
 					CarsCount += 1;
+					(Fields as IDictionary<string, object>).Add("benefits", Reader["car_benefits"].ToString().Split(new Char[]{'|'}));
 					(Fields as IDictionary<string, object>).Add("image",
 						"data:image/png;base64,"+FileToBase64(String.Format("{0}.png", Reader["car_id"]), @"cars\"));
 					Cars.Add(Fields);
