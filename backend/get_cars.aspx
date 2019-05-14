@@ -51,26 +51,26 @@
 	}
 	try
 	{
-		string[] Orders = new string[] {"price_per_day", "passengers", "bags", "doors"};
+		string[] Orders = new string[] { "price_per_day", "price_per_day desc", "passengers desc" };
 		string OrderBy = Orders[Convert.ToInt32(Request["order_by"])];
 		int Page = Request["page"] == null ? 1 : Convert.ToInt32(Request["page"]);
-		int PageSize = Request["page"] == null ? 5 : Convert.ToInt32(Request["page_size"]);
+		int PageSize = Request["page_size"] == null ? 20 : Convert.ToInt32(Request["page_size"]);
 		if (Request["point_id"] == null)
 			throw new Exception();
 		string Where = "";
 		Where += " and point_id in (" + PrepareRequestData(Request["point_id"], false) + ")";
-		if (Request["car_type"] != null)
+		if (Request["car_type"] != null && Request["car_type"] != "")
 			Where += " and car_type in (" + PrepareRequestData(Request["car_type"], true) + ")";
-		if (Request["passengers"] != null)
+		if (Request["passengers"] != null && Request["passengers"] != "")
 			Where += " and passengers in (" + PrepareRequestData(Request["passengers"], false) + ")";
-		if (Request["bags"] != null)
+		if (Request["bags"] != null && Request["bags"] != "")
 			Where += " and bags in (" + PrepareRequestData(Request["bags"], false) + ")";
-		if (Request["doors"] != null)
+		if (Request["doors"] != null && Request["doors"] != "")
 			Where += " and doors in (" + PrepareRequestData(Request["doors"], true) + ")";
-		if (Request["has_ac"] != null)
+		if (Request["has_ac"] != null && Request["has_ac"] != "")
 			Where += " and is_has_ac = 1";
-		if (Request["transmission_type"] != null)
-			Where += " and transmission_type = " + Quote(Request["transmission_type"]);
+		if (Request["transmission_type"] != null && Request["transmission_type"] != "")
+			Where += " and transmission_type in (" + PrepareRequestData(Request["transmission_type"], true) + ")";
 		string Query = String.Format("with cars_filtered as (select *, row_number() over (order by {0}) as rn from vw_cars " +
 			"where is_rented = 0 {3}) " +
 			"select car_id, airport_name, is_airport, car_type, car_name, passengers, bags, doors, price_per_day, is_has_ac, transmission_type, car_benefits " +
