@@ -5,15 +5,16 @@ import DateRangePicker from 'react-bootstrap-daterangepicker';
 import Select from 'react-select';
 import 'bootstrap-daterangepicker/daterangepicker.css';
 
-const Search = ({ points, cols, onChange }) => {
+const Search = ({ points, cols, onChange, dateFrom, dateTo, sameDropOff, fromPoint, toPoint }) => {
 	const [state, setState] = useState({
-		dateFrom: new Date(),
-		dateTo: new Date(),
-		sameDropOff: true,
-		fromPoint: 0,
-		toPoint: 0,
+		dateFrom: dateFrom ? dateFrom : new Date(),
+		dateTo: dateTo ? dateTo : new Date(),
+		sameDropOff: sameDropOff !== undefined ? sameDropOff : true,
+		fromPoint: fromPoint ? fromPoint : 0,
+		toPoint: toPoint ? toPoint : 0,
 		now: new Date()
 	});
+
 	points = !points ? [] : points;
 	return (
 		<>
@@ -42,13 +43,14 @@ const Search = ({ points, cols, onChange }) => {
 							points.filter(x => x.pointId === state.fromPoint).map(x => { return {value: x.pointId, label: x.city} })
 					}
 					onChange={ value => {
-						setState({
+						const newState = {
 							...state,
 							fromPoint: value ? value.value : 0,
 							toPoint: state.sameDropOff ? (value ? value.value : 0) : state.toPoint
-							});
+						};
+						setState(newState);
 						if (onChange)
-							onChange(!value || value.value === 0 || (!state.sameDropOff && state.toPoint === 0));
+							onChange(!value || value.value === 0 || (!state.sameDropOff && state.toPoint === 0), newState);
 						}
 					}
 				/>
@@ -67,16 +69,22 @@ const Search = ({ points, cols, onChange }) => {
 							points.filter(x => x.pointId === state.toPoint).map(x => { return {value: x.pointId, label: x.city} })
 					}
 					onChange={ value => {
-						setState({ ...state, toPoint: value ? value.value : 0 });
+						const newState = { ...state, toPoint: value ? value.value : 0 };
+						setState(newState);
 						if (onChange)
-							onChange(!value || value.value === 0 || state.fromPoint === 0);
+							onChange(!value || value.value === 0 || state.fromPoint === 0, newState);
 						}
 					}
 				/>
 			</Col>
 			<Col xs={12} md={ 12 / cols } className="pt-4">
 				<DateRangePicker onApply={
-					(e, picker) => setState({ ...state, dateFrom: new Date(picker.startDate), dateTo: new Date(picker.endDate) })
+						(e, picker) => {
+							const newState = { ...state, dateFrom: new Date(picker.startDate), dateTo: new Date(picker.endDate) };
+							setState(newState);
+							if (onChange)
+								onChange(state.fromPoint === 0 || state.toPoint === 0, newState);
+						}
 					}
 					minDate = { state.now }
 					startDate = { state.dateFrom }
@@ -84,7 +92,12 @@ const Search = ({ points, cols, onChange }) => {
 					containerClass="w-100"
 					autoApply={true}
 				>
-					<input type="text" className="form-control" onChange={()=>{}} value={ `${state.dateFrom.toDateString()} — ${state.dateTo.toDateString()}` } />
+					<input
+						type="text"
+						className="form-control"
+						onChange={() => {}}
+						value={ `${state.dateFrom.toDateString()} — ${state.dateTo.toDateString()}` }
+					/>
 				</DateRangePicker>
 			</Col>
 		</>
@@ -94,7 +107,12 @@ const Search = ({ points, cols, onChange }) => {
 Search.propTypes = {
 	points: PropTypes.array.isRequired,
 	cols: PropTypes.number.isRequired,
-	onChange: PropTypes.func
+	onChange: PropTypes.func,
+	dateFrom: PropTypes.objectOf(Date),
+	dateTo: PropTypes.objectOf(Date),
+	sameDropOff: PropTypes.bool,
+	fromPoint: PropTypes.number,
+	toPoint: PropTypes.number
 };
 
 export default Search;
