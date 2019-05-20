@@ -72,10 +72,10 @@
 		if (Request["transmission_type"] != null && Request["transmission_type"] != "")
 			Where += " and transmission_type in (" + PrepareRequestData(Request["transmission_type"], true) + ")";
 		string Query = String.Format("with cars_filtered as (select *, row_number() over (order by {0}) as rn from vw_cars " +
-			"where is_rented = 0 {3}) " +
+			"where car_id not in (select car_id from dbo.get_rented_cars({4}, {5})) {3}) " +
 			"select car_id, airport_name, is_airport, car_type, car_name, passengers, bags, doors, price_per_day, is_has_ac, transmission_type, car_benefits " +
 			"from cars_filtered where rn between {1} and {2} order by {0}",
-			OrderBy, (Page - 1) * PageSize + 1, Page * PageSize, Where);
+			OrderBy, (Page - 1) * PageSize + 1, Page * PageSize, Where, Quote(Request["date_from"]), Quote(Request["date_to"]));
 		var Command = new SqlCommand(Query, Connection);
 		using (SqlDataReader Reader = Command.ExecuteReader())
 		{
