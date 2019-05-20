@@ -24,10 +24,15 @@ const Search = ({ points, cols, onChange, dateFrom, dateTo, sameDropOff, fromPoi
 					id="drop-off"
 					label="Same drop-off"
 					checked={ state.sameDropOff }
-					onChange={ () => setState({ ...state,
-						sameDropOff: !state.sameDropOff,
-						toPoint: !state.sameDropOff ? state.fromPoint : state.toPoint
-						})
+					onChange={ () => {
+						const newState = { ...state,
+							sameDropOff: !state.sameDropOff,
+							toPoint: !state.sameDropOff ? state.fromPoint : state.toPoint
+						};
+						setState(newState);
+						if (onChange)
+							onChange(newState.fromPoint === 0 || newState.toPoint === 0, newState);
+					}
 					}
 				/>
 				<Select
