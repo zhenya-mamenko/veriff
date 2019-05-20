@@ -24,17 +24,22 @@ const Card = ({ data, button, onClick }) => {
 				<Row>
 					<Col xs="12" md="6">
 						<h4>
-							{data.carName}
+							{ data.carName }
 							<br />
 							<small className="text-muted font-weight-light">{ "or similar " + data.carType }</small>
 						</h4>
 						<p className="mt-3 font-weight-bold">
-							<FontAwesomeIcon icon={faUserFriends} size="lg" className="mr-2 text-secondary" />{data.passengers}
-							<FontAwesomeIcon icon={faSuitcaseRolling} size="lg" className="mr-2 ml-5 text-secondary" />{data.bags}
+							<FontAwesomeIcon icon={ faUserFriends } size="lg" className="mr-2 text-secondary" />{ data.passengers }
+							<FontAwesomeIcon icon={ faSuitcaseRolling } size="lg" className="mr-2 ml-5 text-secondary" />{ data.bags }
 						</p>
 						{ badges &&
 						<p>
-							{badges}
+							{ badges }
+						</p>
+						}
+						{ data.info &&
+						<p>
+							{ data.info }
 						</p>
 						}
 					</Col>
