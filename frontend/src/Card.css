@@ -1,3 +1,7 @@
 .Card-small {
 	font-size: 0.8rem;
 }
+
+.Card-rowheight {
+	min-height: 142px;
+}

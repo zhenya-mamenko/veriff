@@ -41,21 +41,23 @@ const Card = ({ data, button }) => {
 					<Col xs="12" md="4">
 						<img className="float-right mr-2" src={data.image} alt={data.carName} />
 					</Col>
-					<Col xs="12" md="2" className="p-2 border-left">
+					<Col xs="12" md="2" className="p-2 border-left Card-rowheight">
 						<p className="h4 text-center mb-3">
 							{ data.oldPrice && <small className="text-danger"><br /><del>${ oldPrice }</del></small> }
 							${ price }
 							<br /><small className="text-muted Card-small">Total price</small>
 						</p>
-						<p className="text-center">
-							<Button
-								as="input"
-								value={ button }
-								className="w-75"
-								variant="info"
-								onClick={ onClick }
-							/>
-						</p>
+						{ button !== "" &&
+							<p className="text-center">
+								<Button
+									as="input"
+									value={ button }
+									className="w-75"
+									variant="info"
+									onClick={ onClick }
+								/>
+							</p>
+						}
 					</Col>
 				</Row>
 			</Container>
