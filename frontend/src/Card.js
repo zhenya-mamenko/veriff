@@ -5,7 +5,7 @@ import { faUserFriends, faSuitcaseRolling } from '@fortawesome/free-solid-svg-ic
 import { Row, Col, Spinner, Button, Container } from 'react-bootstrap';
 import './Card.css';
 
-const Card = ({ data, button }) => {
+const Card = ({ data, button, onClick }) => {
 	if (data) {
 		let badges = data.benefits && data.benefits.length !== 0 ? [] : null;
 		for (let i = 0; data.benefits && i < data.benefits.length; i++) {
@@ -15,7 +15,7 @@ const Card = ({ data, button }) => {
 				badges.push(<span key={ `badge${i}` } className="badge badge-success mr-1">{ benefit }</span>);
 			}
 		}
-		let { price, oldPrice, onClick } = data;
+		let { price, oldPrice } = data;
 		if (data.oldPrice)
 			oldPrice = Math.floor(data.oldPrice);
 		price = Math.floor(data.price);
@@ -43,7 +43,7 @@ const Card = ({ data, button }) => {
 					</Col>
 					<Col xs="12" md="2" className="p-2 border-left Card-rowheight">
 						<p className="h4 text-center mb-3">
-							{ data.oldPrice && <small className="text-danger"><br /><del>${ oldPrice }</del></small> }
+							{ data.oldPrice && <small className="text-danger"><del>${ oldPrice }</del><br /></small> }
 							${ price }
 							<br /><small className="text-muted Card-small">Total price</small>
 						</p>
