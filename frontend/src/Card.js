@@ -59,7 +59,10 @@ const Card = ({ data, button, onClick }) => {
 									value={ button }
 									className="w-75"
 									variant="info"
-									onClick={ onClick }
+									onClick={ () => {
+										if (onClick)
+											onClick(data.carId, data.price)
+									} }
 								/>
 							</p>
 						}

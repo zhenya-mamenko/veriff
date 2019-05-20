@@ -9,7 +9,7 @@ import Card from './Card';
 import FilterGroup from './FilterGroup';
 import $ from 'jquery';
 
-const Results = ({ points, fromPoint, toPoint, dateFrom, dateTo, isLogged }) => {
+const Results = ({ points, fromPoint, toPoint, dateFrom, dateTo, isLogged, onRentClick }) => {
 	const [state, setState] = useState({
 		disabled: false,
 		cars: null,
@@ -75,10 +75,20 @@ const Results = ({ points, fromPoint, toPoint, dateFrom, dateTo, isLogged }) => 
 			<Card key={ `car-${data.carId}` }
 				data={data}
 				button={ isLogged ? "Rent it!" : "" }
+				onClick={ (carId, price) => {
+					if (onRentClick) {
+						const { fromPoint, toPoint, dateFrom, dateTo } = state;
+						const data = { carId, price, fromPoint, toPoint,
+							dateFrom: dateFrom.toISOString().substring(0, 10),
+							dateTo: dateTo.toISOString().substring(0, 10)
+							};
+						onRentClick(data);
+					}
+				} }
 			/>);
 	}
 	if (cards.length === 0)
-		cards.push(<div className="h5 text-center mt-4">Nothing found. Try to change search parameters.</div>);
+		cards.push(<div key="nothing" className="h5 text-center mt-4">Nothing found. Try to change search parameters.</div>);
 	const passState = {
 		points,
 		dateFrom: state.dateFrom,
@@ -234,7 +244,8 @@ Results.propTypes = {
 	sameDropOff: PropTypes.bool,
 	fromPoint: PropTypes.number,
 	toPoint: PropTypes.number,
-	isLogged: PropTypes.bool.isRequired
+	isLogged: PropTypes.bool.isRequired,
+	onRentClick: PropTypes.func
 };
 
 export default Results;

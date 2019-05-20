@@ -15,7 +15,7 @@ const App = () => {
 		sameDropOff: true,
 		fromPoint: 0,
 		toPoint: 0,
-		isResults: false,
+		page: 0,
 		isLogged: false
 	});
 
@@ -29,12 +29,30 @@ const App = () => {
 
 	const handleClick = (data) => {
 		const { dateFrom, dateTo, sameDropOff, fromPoint, toPoint } = data;
-		setState({ ...state, isResults: true, dateFrom, dateTo, sameDropOff, fromPoint, toPoint });
+		setState({ ...state, page: 1, dateFrom, dateTo, sameDropOff, fromPoint, toPoint });
 	}
 
 	const handleUserStatus = (data) => {
 		const { isLogged } = data;
 		setState({ ...state, isLogged });
+	}
+
+	const handleRentClick = (data) => {
+		console.log(state.isLogged, data)
+		if (!state.isLogged)
+			return;
+		const fields = [ "carId", "price", "fromPoint", "toPoint", "dateFrom", "dateTo" ];
+		let formData = new FormData();
+		for (let i = 0; i < fields.length; i++)
+			formData.append(fields[i], data[fields[i]]);
+		fetch(BACKEND_URL + "/rent.aspx", {
+			method: "POST",
+			body: formData,
+			credentials: "include"
+			})
+			.then(() => {
+				setState({ ...state, page: 2 });
+			})
 	}
 
 	return (
@@ -59,13 +77,13 @@ const App = () => {
 			</Navbar>
 
 			{
-				!state.isResults &&
+				state.page === 0 &&
 				<Home points={ state.points } onButtonClick={ handleClick } />
 			}
 			{
-				state.isResults &&
+				state.page === 1 &&
 				<Suspense fallback={ <Container className="text-center"><Spinner animation="border" role="status" size="sm" /> Loading...</Container> }>
-					<Results { ...state } />
+					<Results { ...state } onRentClick={ handleRentClick } />
 				</Suspense>
 				
 			}
