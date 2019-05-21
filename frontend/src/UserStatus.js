@@ -19,9 +19,8 @@ const UserStatus = ({ onChange }) => {
 	const logout = <a className="ml-3 align-middle" href="#logout" onClick={ (e) => {
 			e.preventDefault();
 			e.stopPropagation();
-			const url = BACKEND_URL + "/logout.aspx";
 			setStatus(loadingStatus);
-			fetch(url, { credentials: "include" })
+			fetch(BACKEND_URL + "/logout.aspx", { credentials: "include" })
 				.then(() => { setState({ ...state, isLoading: true }); })
 				.catch(() => { setState({ ...state, isLoading: true }); });
 		} }><FontAwesomeIcon icon={faSignOutAlt} size="lg" /></a>
@@ -71,7 +70,7 @@ const UserStatus = ({ onChange }) => {
 				if (onChange)
 					onChange({ isLogged });
 			})
-		};
+	};
 	const handleClose = () => {
 		$("#errorMessage").addClass("d-none").removeClass("d-block");
 		setState({ ...state, showModal: false, isValidated: false });
