@@ -11,7 +11,7 @@
 	{
 		if (UserId == 0)
 		{
-			Response.Write(JsonConvert.SerializeObject(new { status = "error", error = "not logged", session = Session["UserId"] }));
+			Response.Write(JsonConvert.SerializeObject(new { status = "error", error = "not logged" }));
 		}
 		else
 		{
