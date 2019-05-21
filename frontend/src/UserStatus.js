@@ -60,7 +60,7 @@ const UserStatus = ({ onChange }) => {
 					case "invalid_document":
 						setStatus(<><a href="#profile" onClick={ handleProfileClick }><FontAwesomeIcon icon={faUserTimes} size="sm" className="mr-1 text-danger" /> {userName}</a> {logout}</>);
 						break;
-					case "submited":
+					case "submitted":
 						setStatus(<><a href="#profile" onClick={ handleProfileClick }><FontAwesomeIcon icon={faUserClock} size="sm" className="mr-1 text-warning" /> {userName}</a> {logout}</>);
 						break;
 					default:

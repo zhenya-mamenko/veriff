@@ -6,6 +6,7 @@ import UserStatus from './UserStatus';
 import Home from './Home';
 
 const Results = lazy(() => import('./Results'));
+const Profile = lazy(() => import('./Profile'));
 
 const App = () => {
 	const [state, setState] = useState({
@@ -25,6 +26,7 @@ const App = () => {
 			.then(json => {
 				setState({ ...state, points: json });
 			})
+			.catch(() => setState({ ...state, points: [] }))
 	}
 
 	const handleClick = (data) => {
@@ -34,11 +36,10 @@ const App = () => {
 
 	const handleUserStatus = (data) => {
 		const { isLogged } = data;
-		setState({ ...state, isLogged });
+		setState({ ...state, isLogged, page: data.page ? data.page : state.page });
 	}
 
 	const handleRentClick = (data) => {
-		console.log(state.isLogged, data)
 		if (!state.isLogged)
 			return;
 		const fields = [ "carId", "price", "fromPoint", "toPoint", "dateFrom", "dateTo" ];
@@ -54,7 +55,6 @@ const App = () => {
 				setState({ ...state, page: 2 });
 			})
 	}
-
 	return (
 		<>
 			<Navbar expand="md" variant="dark" bg="info" className="mb-3">
@@ -87,7 +87,13 @@ const App = () => {
 				</Suspense>
 				
 			}
-
+			{
+				state.page === 2 &&
+				<Suspense fallback={ <Container className="text-center"><Spinner animation="border" role="status" size="sm" /> Loading...</Container> }>
+					<Profile />
+				</Suspense>
+				
+			}
 		</>
 	);
 }
