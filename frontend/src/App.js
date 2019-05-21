@@ -7,6 +7,7 @@ import Home from './Home';
 
 const Results = lazy(() => import('./Results'));
 const Profile = lazy(() => import('./Profile'));
+const Signup = lazy(() => import('./Signup'));
 
 const App = () => {
 	const [state, setState] = useState({
@@ -91,6 +92,13 @@ const App = () => {
 				state.page === 2 &&
 				<Suspense fallback={ <Container className="text-center"><Spinner animation="border" role="status" size="sm" /> Loading...</Container> }>
 					<Profile />
+				</Suspense>
+				
+			}
+			{
+				state.page === 3 &&
+				<Suspense fallback={ <Container className="text-center"><Spinner animation="border" role="status" size="sm" /> Loading...</Container> }>
+					<Signup />
 				</Suspense>
 				
 			}

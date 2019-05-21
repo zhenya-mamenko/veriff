@@ -85,8 +85,7 @@ const UserStatus = ({ onChange }) => {
 				</Modal.Header>
 				<Modal.Body>
 					<Form
-						noValidate
-						validated={ state.error }
+						validated={ state.isValidated }
 					>
 						<Form.Group controlId="formSigninEmail" as={Row} className="UserStatus-signin mt-3">
 							<Form.Label column sm="2">Email</Form.Label>
@@ -119,7 +118,7 @@ const UserStatus = ({ onChange }) => {
 							const form = e.currentTarget;
 							e.preventDefault();
 							e.stopPropagation();
-							if (form.checkValidity()) {
+							if (form.checkValidity() && $("input:invalid").length === 0) {
 								const email = $("#formSigninEmail").val();
 								const pass = $("#formSigninPassword").val();
 								const hash = sha256(pass);
