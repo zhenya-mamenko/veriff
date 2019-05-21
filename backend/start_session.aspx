@@ -10,6 +10,8 @@
 	try
 	{
 		string Result = "";
+		UserFirstName = UserId == 0 ? Request["first_name"] : UserFirstName;
+		UserLastName = UserId == 0 ? Request["last_name"] : UserLastName;
 		string CallbackUrl = null;
 		if (Request["callback"] != null)
 			CallbackUrl = Request["callback"];
@@ -18,8 +20,8 @@
 				verification = new {
 					callback = CallbackUrl,
 					person = new {
-						firstName = UserId == 0 ? Request["first_name"] : UserFirstName,
-						lastName = UserId == 0 ? Request["last_name"] : UserLastName
+						firstName = UserFirstName,
+						lastName = UserLastName
 					},
 					features = new string[] {"selfid"},
 					timestamp = TimeStamp()
