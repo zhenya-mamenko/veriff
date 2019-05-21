@@ -9,11 +9,6 @@
 	}
 	try
 	{
-		if (UserId == 0)
-		{
-			UserFirstName = Request["first_name"];
-			UserLastName = Request["last_name"];
-		}
 		string Result = "";
 		string CallbackUrl = null;
 		if (Request["callback"] != null)
@@ -23,8 +18,8 @@
 				verification = new {
 					callback = CallbackUrl,
 					person = new {
-						firstName = UserFirstName,
-						lastName = UserLastName
+						firstName = UserId == 0 ? Request["first_name"] : UserFirstName,
+						lastName = UserId == 0 ? Request["last_name"] : UserLastName
 					},
 					features = new string[] {"selfid"},
 					timestamp = TimeStamp()
@@ -32,17 +27,17 @@
 			};
 			string InfoJson = JsonConvert.SerializeObject(Info, Newtonsoft.Json.Formatting.Indented,
 				new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-			var Message = new HttpRequestMessage(new HttpMethod("POST"), API_URL + "/sessions");
-			Message.Content = new StringContent(InfoJson);
-			Message.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-			Message.Content.Headers.Add("x-auth-client", API_KEY);
-			Message.Content.Headers.Add("x-signature", GenerateSignature(InfoJson, API_SECRET));
-			var T = Task.Run(async delegate
+			var Message1 = new HttpRequestMessage(new HttpMethod("POST"), API_URL + "/sessions");
+			Message1.Content = new StringContent(InfoJson);
+			Message1.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+			Message1.Content.Headers.Add("x-auth-client", API_KEY);
+			Message1.Content.Headers.Add("x-signature", GenerateSignature(InfoJson, API_SECRET));
+			var T1 = Task.Run(async delegate
 			{
-				return (await CallVeriffApi(Message));
+				return (await CallVeriffApi(Message1));
 			});
-			T.Wait();
-			Result = T.Result;
+			T1.Wait();
+			Result = T1.Result;
 		}
 		var ResponseDefinition = new {
 			verification = new {
@@ -102,17 +97,17 @@
 				};
 				string MediaJson = JsonConvert.SerializeObject(Media, Newtonsoft.Json.Formatting.Indented,
 					new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-				var Message = new HttpRequestMessage(new HttpMethod("POST"), String.Format("{0}/sessions/{1}/media", API_URL, VeriffResponse.verification.id));
-				Message.Content = new StringContent(MediaJson);
-				Message.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-				Message.Content.Headers.Add("x-auth-client", API_KEY);
-				Message.Content.Headers.Add("x-signature", GenerateSignature(MediaJson, API_SECRET));
-				var T = Task.Run(async delegate
+				var Message2 = new HttpRequestMessage(new HttpMethod("POST"), String.Format("{0}/sessions/{1}/media", API_URL, VeriffResponse.verification.id));
+				Message2.Content = new StringContent(MediaJson);
+				Message2.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+				Message2.Content.Headers.Add("x-auth-client", API_KEY);
+				Message2.Content.Headers.Add("x-signature", GenerateSignature(MediaJson, API_SECRET));
+				var T2 = Task.Run(async delegate
 				{
-					return (await CallVeriffApi(Message));
+					return (await CallVeriffApi(Message2));
 				});
-				T.Wait();
-				Result = T.Result;
+				T2.Wait();
+				Result = T2.Result;
 				if ((JsonConvert.DeserializeAnonymousType(Result, new { status = "" })).status != "success")
 				{
 					throw new Exception();
@@ -127,17 +122,17 @@
 			};
 			string DoneJson = JsonConvert.SerializeObject(Done, Newtonsoft.Json.Formatting.Indented,
 				new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-			var Message = new HttpRequestMessage(new HttpMethod("PATCH"), String.Format("{0}/sessions/{1}", API_URL, VeriffResponse.verification.id));
-			Message.Content = new StringContent(DoneJson);
-			Message.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-			Message.Content.Headers.Add("x-auth-client", API_KEY);
-			Message.Content.Headers.Add("x-signature", GenerateSignature(DoneJson, API_SECRET));
-			var T = Task.Run(async delegate
+			var Message3 = new HttpRequestMessage(new HttpMethod("PATCH"), String.Format("{0}/sessions/{1}", API_URL, VeriffResponse.verification.id));
+			Message3.Content = new StringContent(DoneJson);
+			Message3.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+			Message3.Content.Headers.Add("x-auth-client", API_KEY);
+			Message3.Content.Headers.Add("x-signature", GenerateSignature(DoneJson, API_SECRET));
+			var T3 = Task.Run(async delegate
 			{
-				return (await CallVeriffApi(Message));
+				return (await CallVeriffApi(Message3));
 			});
-			T.Wait();
-			Result = T.Result;
+			T3.Wait();
+			Result = T3.Result;
 			Response.Write(Result);
 			if ((JsonConvert.DeserializeAnonymousType(Result, new { status = "" })).status != "success")
 			{
@@ -145,6 +140,13 @@
 			}
 			string Query = String.Format("exec sp_sessions_update @session_id={0}, @status={1}",
 				Quote(VeriffResponse.verification.id), Quote("submited"));
+			var Command = new SqlCommand(Query, Connection);
+			Command.ExecuteNonQuery();
+		}
+		else
+		{
+			string Query = String.Format("exec sp_sessions_update @session_id={0}, @status={1}",
+				Quote(VeriffResponse.verification.id), Quote("submitted"));
 			var Command = new SqlCommand(Query, Connection);
 			Command.ExecuteNonQuery();
 		}
