@@ -1,0 +1,1 @@
+FROM mamenko/serve:onbuild
