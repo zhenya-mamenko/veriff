@@ -15,10 +15,12 @@
 		}
 		else
 		{
-			string Query = String.Format("set nocount on; declare @rent_id int; select top 1 @rent_id = rent_id where user_id={0} and car_id={1} and is_returned=0; " +
-				"exec sp_rent_update @rent_id = @rent_id, is_returned = 1",
-				UserId, Convert.ToInt32(Request["carId"])
+			string Query = String.Format("set nocount on; declare @rent_id int; "+
+				"set @rent_id = (select top 1 rent_id from vw_rent where user_id={0} and car_id={1} and is_returned=0); " +
+				"exec sp_rent_update @rent_id = @rent_id, @is_returned = 1",
+				UserId, Convert.ToInt32(Request["car_id"])
 				);
+			Response.Write(Query);
 			var Command = new SqlCommand(Query, Connection);
 			Command.ExecuteNonQuery();
 			Response.Write(JsonConvert.SerializeObject(new { status = "ok" }));
