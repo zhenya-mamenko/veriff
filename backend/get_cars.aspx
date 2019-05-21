@@ -65,7 +65,7 @@
 				while (Reader.Read())
 				{
 					dynamic Fields = new ExpandoObject();
-					for (int i = 0; i < Reader.FieldCount - 1; i++)
+					for (int i = 0; i < Reader.FieldCount; i++)
 					{
 						(Fields as IDictionary<string, object>).Add(FieldToJson(Reader.GetName(i)), Reader[i]);
 					}

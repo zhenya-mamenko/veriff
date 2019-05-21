@@ -39,8 +39,8 @@
 			"where user_id={3} and is_returned=0) " +
 			"select car_id, from_airport_name, from_city, to_city, to_airport_name, car_type, car_name, "+
 			"car_passengers as passengers, car_bags as bags, car_doors as doors, price_total as price, "+
-			"car_is_has_ac as is_has_ac, car_transmission_type as transmission_type, car_benefits, "+
-			"text_rent_from, text_rent_until " +
+			"car_is_has_ac as is_has_ac, car_transmission_type as transmission_type, "+
+			"text_rent_from, text_rent_until, car_benefits " +
 			"from cars_filtered where rn between {1} and {2} order by {0}",
 			"rent_from, rent_until", (Page - 1) * PageSize + 1, Page * PageSize, UserId);
 		var Command = new SqlCommand(Query, Connection);
@@ -53,7 +53,7 @@
 				while (Reader.Read())
 				{
 					dynamic Fields = new ExpandoObject();
-					for (int i = 0; i < Reader.FieldCount - 1; i++)
+					for (int i = 0; i < Reader.FieldCount; i++)
 					{
 						(Fields as IDictionary<string, object>).Add(FieldToJson(Reader.GetName(i)), Reader[i]);
 					}
