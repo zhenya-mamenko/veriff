@@ -29,7 +29,19 @@ const UserStatus = ({ onChange }) => {
 			e.preventDefault();
 			e.stopPropagation();
 			setState({ ...state, showModal: true });
-		} }>Sign in</a> or <a href="#signup">Sign up</a></>;
+		} }>Sign in</a> or <a href="#signup" onClick={ (e) => {
+			e.preventDefault();
+			e.stopPropagation();
+			if (onChange)
+				onChange({ isLogged: false, page: 3 });
+		} }>Sign up</a></>;
+
+	const handleProfileClick = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		if (onChange)
+			onChange({ isLogged: true, page: 2 });
+	}
 
 	if (state.isLoading)
 	{
@@ -40,23 +52,24 @@ const UserStatus = ({ onChange }) => {
 				const userName = <span className="text-white">{json.firstName} {json.lastName}</span>;
 				switch (json.status) {
 					case "approved":
-						setStatus(<><a href="#profile"><FontAwesomeIcon icon={faUser} size="sm" className="mr-1 text-white" /> {userName}</a> {logout}</>);
+						setStatus(<><a href="#profile" onClick={ handleProfileClick }><FontAwesomeIcon icon={faUser} size="sm" className="mr-1 text-white" /> {userName}</a> {logout}</>);
 						break;
 					case "resubmission_requested":
 					case "declined":
 					case "expired":
 					case "abandoned":
 					case "invalid_document":
-						setStatus(<><a href="#profile"><FontAwesomeIcon icon={faUserTimes} size="sm" className="mr-1 text-danger" /> {userName}</a> {logout}</>);
+						setStatus(<><a href="#profile" onClick={ handleProfileClick }><FontAwesomeIcon icon={faUserTimes} size="sm" className="mr-1 text-danger" /> {userName}</a> {logout}</>);
 						break;
 					case "submited":
-						setStatus(<><a href="#profile"><FontAwesomeIcon icon={faUserClock} size="sm" className="mr-1 text-warning" /> {userName}</a> {logout}</>);
+						setStatus(<><a href="#profile" onClick={ handleProfileClick }><FontAwesomeIcon icon={faUserClock} size="sm" className="mr-1 text-warning" /> {userName}</a> {logout}</>);
 						break;
 					default:
 						setStatus(defaultStatus);
 				}
+				const isLogged = json.status === "approved";
 				if (onChange)
-					onChange({ isLogged: json.status === "approved" });
+					onChange({ isLogged });
 			})
 		};
 	const handleClose = () => {
