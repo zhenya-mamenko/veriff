@@ -19,27 +19,6 @@
 		return (Result);
 	}
 
-	string FieldToJson(string S)
-	{
-		string Result = "";
-		bool IsCapital = false;
-		for (int i = 0; i < S.Length; i++)
-		{
-			if (IsCapital)
-			{
-				Result += Char.ToUpper(S[i]);
-				IsCapital = false;
-			}
-			else
-			{
-				if (S[i] == '_')
-					IsCapital = true;
-				else
-					Result += Char.ToLower(S[i]);
-			}
-		}
-		return (Result);
-	}
 </script>
 <%
 	Response.Clear();
