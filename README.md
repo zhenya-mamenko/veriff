@@ -1,5 +1,7 @@
 # Veriff Full stack test task
 
+**You can use mamenko@gmail.com / password pair to login and test rent/return**
+
 ## Frontend
 
 Exec command ```npm run build```
