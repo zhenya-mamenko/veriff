@@ -10,7 +10,7 @@ and then ```docker run --restart always -d -p 80:3000 veriff-test```
 
 You can change backend path in ```consts.js```.
 
-**Site must be run on localhost:3000, because web server's Access-Control-Allow-Origin header set to http://localhost:3000**
+**Site must be run on localhost:3000, because backend web server's Access-Control-Allow-Origin header set to http://localhost:3000**
 
 ## Backend
 
